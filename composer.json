@@ -1,0 +1,17 @@
+{
+    "name": "uhin/x12-parser",
+    "type": "library",
+    "authors": [
+        {
+            "name": "Cameron Hejazi",
+            "email": "chejazi@uhin.org"
+        }
+    ],
+    "autoload": {
+        "psr-0" : {
+            "Uhin\\X12Parser" : "src"
+        }
+    },
+    "require": {}
+}
+
