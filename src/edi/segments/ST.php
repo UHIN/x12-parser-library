@@ -6,9 +6,9 @@ namespace Uhin\X12Parser\EDI\Segments;
  * Class ST
  * @package Uhin\X12Parser\EDI\Segments
  *
- * @property-read string ST01 Transaction Set Identifier Code
- * @property-read string ST02 Transaction Set Control Number
- * @property-read string ST03 Implementation Convention Reference
+ * @property string ST01 Transaction Set Identifier Code
+ * @property string ST02 Transaction Set Control Number
+ * @property string ST03 Implementation Convention Reference
  */
 class ST extends Envelope
 {

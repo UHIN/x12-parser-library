@@ -5,22 +5,22 @@ namespace Uhin\X12Parser\EDI\Segments;
 /**
  * Class ISA
  *
- * @property-read string ISA01 Authorization Information Qualifier
- * @property-read string ISA02 Authorization Information
- * @property-read string ISA03 Security Information Qualifier
- * @property-read string ISA04 Security Information
- * @property-read string ISA05 Interchange ID Qualifier
- * @property-read string ISA06 Interchange Sender ID
- * @property-read string ISA07 Interchange ID Qualifier
- * @property-read string ISA08 Interchange Receiver ID
- * @property-read string ISA09 Interchange Date
- * @property-read string ISA10 Interchange Time
- * @property-read string ISA11 Interchange Control Standards ID
- * @property-read string ISA12 Interchange Control Version Number
- * @property-read string ISA13 Interchange Control Number
- * @property-read string ISA14 Acknowledgement Requested
- * @property-read string ISA15 Test Indicator
- * @property-read string ISA16 Sub Element Separator
+ * @property string ISA01 Authorization Information Qualifier
+ * @property string ISA02 Authorization Information
+ * @property string ISA03 Security Information Qualifier
+ * @property string ISA04 Security Information
+ * @property string ISA05 Interchange ID Qualifier
+ * @property string ISA06 Interchange Sender ID
+ * @property string ISA07 Interchange ID Qualifier
+ * @property string ISA08 Interchange Receiver ID
+ * @property string ISA09 Interchange Date
+ * @property string ISA10 Interchange Time
+ * @property string ISA11 Interchange Control Standards ID
+ * @property string ISA12 Interchange Control Version Number
+ * @property string ISA13 Interchange Control Number
+ * @property string ISA14 Acknowledgement Requested
+ * @property string ISA15 Test Indicator
+ * @property string ISA16 Sub Element Separator
  *
  * @package Uhin\X12Parser
  */

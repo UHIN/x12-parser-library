@@ -311,6 +311,13 @@ class Parser
      */
     private function parseDelimiters(&$segmentDelimiter, &$dataElementDelimiter, &$repetitionDelimiter, &$subRepetitionDelimiter)
     {
+        // The spec is supposed to be:
+        // The repetition separator is byte 83
+        // The component element separator is byte 105
+        // The segment terminator is the byte that immediately follows the component element separator
+        //
+        // But we get less errors parsing X12 files if we just parse out the delimiters from the ISA segment instead...
+
         // Check if we're at the end of the file
         if ($this->reader->isDone()) {
             return false;
@@ -382,6 +389,7 @@ class Parser
      */
     private function findHLParent(&$hlSegments, &$parentId)
     {
+        /** @var HL $hlSegment */
         foreach ($hlSegments as &$hlSegment) {
             if (trim($hlSegment->HL01) === $parentId) {
                 return $hlSegment;
