@@ -1,17 +1,21 @@
 {
-    "name": "uhin/x12-parser",
-    "type": "library",
-    "authors": [
-        {
-            "name": "Cameron Hejazi",
-            "email": "chejazi@uhin.org"
-        }
-    ],
-    "autoload": {
-        "psr-0" : {
-            "Uhin\\X12Parser" : "src"
-        }
-    },
-    "require": {}
+  "name": "uhin/x12-parser",
+  "description": "A library used to parse X12 EDI",
+  "type": "library",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Cameron Hejazi",
+      "email": "chejazi@uhin.org"
+    }
+  ],
+  "minimum-stability": "dev",
+  "prefer-stable": true,
+  "autoload": {
+    "psr-4": {
+      "Uhin\\X12Parser\\": "src/"
+    }
+  },
+  "require": {}
 }
 
