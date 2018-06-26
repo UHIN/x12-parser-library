@@ -10,5 +10,6 @@ class X12
 
     // TODO: add some lookup/search functions
     // TODO: add setters?
+    // TODO: add some splitters?
 
 }
