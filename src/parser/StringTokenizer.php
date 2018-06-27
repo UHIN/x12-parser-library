@@ -82,4 +82,34 @@ class StringTokenizer
         }
     }
 
+//    public function next($delimiter, $incrementIndex = true)
+//    {
+//        // Check if we're done reading the file
+//        if ($this->isDone()) {
+//            return false;
+//        }
+//
+//        $start = $this->currentIndex;
+//
+//        // Look for the next delimiter in the file
+//        $nextDelimiterIndex = strpos($this->string, $delimiter, $this->currentIndex);
+//
+//
+//        if ($nextDelimiterIndex === false) {
+//            // If no more delimiters can be found, then just return the rest of the file
+//            if ($incrementIndex) {
+//                $this->currentIndex = $this->stringLength;
+//            }
+//            return substr($this->string, $start);
+//
+//        } else {
+//            // If we found another delimiter, then return the text from the current position
+//            // up until the position of the next delimiter
+//            if ($incrementIndex) {
+//                $this->currentIndex = $nextDelimiterIndex + 1;
+//            }
+//            return substr($this->string, $start, ($nextDelimiterIndex - $start));
+//        }
+//    }
+
 }

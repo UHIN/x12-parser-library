@@ -123,7 +123,7 @@ class X12Serializer
 
             // Add the new line after this segment, if necessary
             if ($this->addNewLineAfterIEA) {
-                $output .= "\n";
+                $output .= "\r\n";
             }
         }
 
@@ -174,7 +174,7 @@ class X12Serializer
         }
 
         // Concatenate the data elements
-        return implode($this->dataElementDelimiter, $elements) . $this->segmentDelimiter . ($this->addNewLineAfterSegment ? "\n" : "");
+        return implode($this->dataElementDelimiter, $elements) . $this->segmentDelimiter . ($this->addNewLineAfterSegment ? "\r\n" : "");
     }
 
     /**

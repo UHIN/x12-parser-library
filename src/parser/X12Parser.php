@@ -34,11 +34,11 @@ class X12Parser
      */
     public function parse()
     {
-        // Analytics
-        $analytics = false;
+        // Logging
+        $logging = false;
         $startTime = microtime(true);
-        $lastLogTime = $startTime;
-        if ($analytics) {
+        $segmentCount = 0;
+        if ($logging) {
             echo "Beginning parsing of file: {$this->formatBytes($this->reader->getStringLength())} bytes.\r\n";
         }
 
@@ -56,17 +56,6 @@ class X12Parser
 
         // Read through the segments in the file
         while (($segmentString = $this->reader->next($segmentDelimiter)) !== false) {
-
-            // Analytics
-            if ($analytics) {
-                $now = microtime(true);
-                if ($now - $lastLogTime > 2) {
-                    $lastLogTime = $now;
-                    $elapsed = $now - $startTime;
-                    $percentComplete = round($this->reader->getCompletionPercent() * 100, 3);
-                    echo "Parsed {$percentComplete}% of file, {$this->formatSeconds($elapsed)} elapsed...\r\n";
-                }
-            }
 
             // Check for an empty string
             if (strlen($segmentString) <= 0) {
@@ -243,13 +232,28 @@ class X12Parser
                     break;
             }
 
+            // Logging
+            $segmentCount++;
+            if ($logging) {
+                if ($segmentCount % 5000 === 0) {
+                    $elapsed = microtime(true) - $startTime;
+                    $percentComplete = round($this->reader->getCompletionPercent() * 100, 3);
+                    echo "Parsed {$percentComplete}% of file, {$this->formatSeconds($elapsed)} elapsed...\r\n";
+                }
+            }
+
+            // Garbage cleanup
+            if ($segmentCount % 10000 === 0) {
+                gc_collect_cycles();
+            }
+
         }
 
-        // Analytics
-        if ($analytics) {
+        // Logging
+        if ($logging) {
             $now = microtime(true);
             $elapsed = round($now - $startTime, 3);
-            echo "Finished parsing {$this->formatBytes($this->reader->getStringLength())} file in {$elapsed} seconds.\r\n";
+            echo "Finished parsing {$this->formatBytes($this->reader->getStringLength())} file ({$segmentCount} segments) in {$elapsed} seconds.\r\n";
         }
 
         // Return the parsed X12
@@ -365,13 +369,14 @@ class X12Parser
         // Reset the reader to the correct position (immediately after the ISA line)
         $this->reader->setPosition($position);
 
-        // Check if all the delimiters are valid
+        // Check if all the delimiters are valid before setting any of them
         if (
             strlen($dataEl) === 1
             && strlen($rep) === 1
             && strlen($subRep) === 1
             && strlen($segment) === 1
         ) {
+            // These are set by reference, so the variables passed to this function get set here
             $segmentDelimiter = $segment;
             $dataElementDelimiter = $dataEl;
             $repetitionDelimiter = $rep;
