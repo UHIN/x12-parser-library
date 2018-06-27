@@ -36,28 +36,28 @@ $rawX12 = file_get_contents('path-to-your-file');
 $parser = new X12Parser($rawX12);
 
 // Parse the file into an object data structure
-$edi = $parser->parse();
-// $edi is now an X12 object containing all of the information from the X12 file
+$x12 = $parser->parse();
+// $x12 is now an X12 object containing all of the information from the X12 file
 ```
 
 ##### Accessing/Modifying data in the X12
 Note: If any segment/property can have multiples then it will always be parsed into an array, even if there is only one present. This is to avoid confusion on whether or not you are dealing with an array or an object.
 ```php
-// Using the $edi object from the examlpe above...
+// Using the $x12 object from the examlpe above...
 
 // Retrieving the GS06
-$gs06 = $edi->ISA[0]->GS[0]->GS06;
+$gs06 = $x12->ISA[0]->GS[0]->GS06;
 
 // Setting the GS06 value
-$edi->ISA[0]->GS[0]->GS06 = 'Changed Value';
+$x12->ISA[0]->GS[0]->GS06 = 'Changed Value';
 ```
 
 ##### Converting a parsed file back to X12
 ```php
 use Uhin\X12Parser\Serializer\X12Serializer;
 
-// Using the $edi object from the examlpe above...
-$serializer = new X12Serializer($edi);
+// Using the $x12 object from the examlpe above...
+$serializer = new X12Serializer($x12);
 
 // Options for serializing:
 $serializer->addNewLineAfterSegment(true);
