@@ -3,8 +3,9 @@
 namespace Uhin\X12Parser\EDI\Segments;
 
 use Exception;
+use JsonSerializable;
 
-class Segment
+class Segment implements JsonSerializable
 {
 
     /** @var array */
@@ -72,6 +73,27 @@ class Segment
 
         // Something went wrong
         throw new Exception('Trying to access ' . $name . ' when no property for that name exists.');
+    }
+
+    /**
+     * Specify data which should be serialized to JSON
+     * @link http://php.net/manual/en/jsonserializable.jsonserialize.php
+     * @return mixed data which can be serialized by <b>json_encode</b>,
+     * which is a value of any type other than a resource.
+     * @since 5.4.0
+     */
+    public function jsonSerialize()
+    {
+        $serialized = [];
+
+        // Convert the data elements into an associative array of values, ie: {"GS01" => "...", "GS02" => "...", etc.}
+        $segmentId = $this->getSegmentId();
+        for ($element = 0; $element < count($this->dataElements); $element++) {
+            $elementName = $segmentId . sprintf("%02d", $element);
+            $serialized[$elementName] = $this->dataElements[$element];
+        }
+
+        return $serialized;
     }
 
 }
