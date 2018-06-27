@@ -9,7 +9,7 @@ You'll need to include this library in your project in order to use it. First, a
   "repositories": [
     {
       "type": "vcs",
-      "url":  "git@git.uhin.org/shr/x12-parser.git"
+      "url":  "ssh://git@git.uhin.org/shr/x12-parser.git"
     }
   ]
 }
