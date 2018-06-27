@@ -198,37 +198,7 @@ class X12Parser
 
                 default:
                     // This is some other segment that we don't account for above, so handle it now...
-
-                    /** @var ISA $isa */
-                    $isa = end($x12->ISA);
-
-                    /** @var GS $gs */
-                    $gs = end($isa->GS);
-
-                    /** @var ST $st */
-                    $st = end($gs->ST);
-
-                    // Create the generic segment
-                    $segment = new Segment($dataElements);
-
-                    // Check if this segment belongs to an HL segment
-                    if (count($st->HL) > 0) {
-                        /** @var HL $hl */
-                        $hl = end($st->HL);
-
-                        // Recursively check for any nested HL segments
-                        while (count($hl->HL) > 0) {
-                            /** @var HL $hl */
-                            $hl = end($hl->HL);
-                        }
-
-                        // Add the segment to the last HL
-                        $hl->properties[] = $segment;
-
-                    } else {
-                        // Otherwise, this should belong to the ST segment
-                        $st->properties[] = $segment;
-                    }
+                    $this->addGenericSegment($x12, $dataElements);
                     break;
             }
 
@@ -258,6 +228,47 @@ class X12Parser
 
         // Return the parsed X12
         return $x12;
+    }
+
+    /**
+     * Adds a generic segment (one that we don't specifically handle) to the X12
+     * object. This will place the segment into the right location of the data
+     * structure.
+     *
+     * @param X12 $x12
+     * @param array $dataElements
+     */
+    private function addGenericSegment(&$x12, &$dataElements) {
+        /** @var ISA $isa */
+        $isa = end($x12->ISA);
+
+        /** @var GS $gs */
+        $gs = end($isa->GS);
+
+        /** @var ST $st */
+        $st = end($gs->ST);
+
+        // Create the generic segment
+        $segment = new Segment($dataElements);
+
+        // Check if this segment belongs to an HL segment
+        if (count($st->HL) > 0) {
+            /** @var HL $hl */
+            $hl = end($st->HL);
+
+            // Recursively check for any nested HL segments
+            while (count($hl->HL) > 0) {
+                /** @var HL $hl */
+                $hl = end($hl->HL);
+            }
+
+            // Add the segment to the last HL
+            $hl->properties[] = $segment;
+
+        } else {
+            // Otherwise, this should belong to the ST segment
+            $st->properties[] = $segment;
+        }
     }
 
     /**
