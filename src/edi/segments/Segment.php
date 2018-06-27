@@ -88,7 +88,7 @@ class Segment implements JsonSerializable
 
         // Convert the data elements into an associative array of values, ie: {"GS01" => "...", "GS02" => "...", etc.}
         $segmentId = $this->getSegmentId();
-        for ($element = 0; $element < count($this->dataElements); $element++) {
+        for ($element = 1; $element < count($this->dataElements); $element++) {
             $elementName = $segmentId . sprintf("%02d", $element);
             $serialized[$elementName] = $this->dataElements[$element];
         }

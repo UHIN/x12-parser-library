@@ -24,7 +24,7 @@ class X12 implements JsonSerializable
     public function jsonSerialize()
     {
         return [
-            'EDI-X12' => $this->ISA,
+            "EDI-X12" => $this->ISA,
         ];
     }
 
