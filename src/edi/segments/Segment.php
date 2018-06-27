@@ -15,11 +15,13 @@ class Segment
         $this->dataElements = $dataElements;
     }
 
-    public function segmentId() {
+    public function getSegmentId()
+    {
         return $this->dataElements[0];
     }
 
-    public function getDataElements() {
+    public function getDataElements()
+    {
         return $this->dataElements;
     }
 
@@ -36,7 +38,7 @@ class Segment
     public function __get($name)
     {
         // Try to get a data element, ie: check for something like "GS02"
-        if (preg_match('/' . $this->segmentId() . '(\d+)/', $name, $matches)) {
+        if (preg_match('/' . $this->getSegmentId() . '(\d+)/', $name, $matches)) {
             $index = intval(ltrim($matches[1], '0'));
             if ($index < count($this->dataElements)) {
                 return $this->dataElements[$index];
@@ -60,7 +62,7 @@ class Segment
     public function __set($name, $value)
     {
         // Try to get a data element, ie: check for something like "GS02"
-        if (preg_match('/' . $this->segmentId() . '(\d+)/', $name, $matches)) {
+        if (preg_match('/' . $this->getSegmentId() . '(\d+)/', $name, $matches)) {
             $index = intval(ltrim($matches[1], '0'));
             if ($index < count($this->dataElements)) {
                 $this->dataElements[$index] = $value;

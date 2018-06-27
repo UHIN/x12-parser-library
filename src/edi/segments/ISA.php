@@ -24,7 +24,7 @@ namespace Uhin\X12Parser\EDI\Segments;
  *
  * @package Uhin\X12Parser
  */
-class ISA extends Envelope
+class ISA extends Segment
 {
 
     /** @var Segment */

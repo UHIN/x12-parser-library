@@ -10,14 +10,14 @@ use Uhin\X12Parser\EDI\Segments\HL;
 use Uhin\X12Parser\EDI\Segments\ISA;
 use Uhin\X12Parser\EDI\Segments\ST;
 
-class Parser
+class X12Parser
 {
 
     /** @var StringTokenizer */
     private $reader;
 
     /**
-     * Parser constructor.
+     * X12Parser constructor.
      * @param string $rawX12
      */
     public function __construct($rawX12)

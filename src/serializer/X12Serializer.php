@@ -9,8 +9,11 @@ use Uhin\X12Parser\EDI\Segments\Segment;
 use Uhin\X12Parser\EDI\Segments\ST;
 use Uhin\X12Parser\EDI\X12;
 
-class X12Serializer extends Serializer
+class X12Serializer
 {
+
+    /** @var X12 */
+    protected $x12;
 
     /** @var bool */
     private $addNewLineAfterSegment;
@@ -32,9 +35,9 @@ class X12Serializer extends Serializer
 
     public function __construct(X12 &$x12)
     {
+        $this->x12 = $x12;
         $this->addNewLineAfterSegment = false;
         $this->addNewLineAfterIEA = false;
-        parent::__construct($x12);
     }
 
     /**
@@ -43,7 +46,8 @@ class X12Serializer extends Serializer
      *
      * @param $addNewLineAfterSegment bool
      */
-    public function addNewLineAfterSegment($addNewLineAfterSegment) {
+    public function addNewLineAfterSegment($addNewLineAfterSegment)
+    {
         $this->addNewLineAfterSegment = $addNewLineAfterSegment;
     }
 
@@ -53,7 +57,8 @@ class X12Serializer extends Serializer
      *
      * @param $addNewLineAfterIEA bool
      */
-    public function addNewLineAfterIEA($addNewLineAfterIEA) {
+    public function addNewLineAfterIEA($addNewLineAfterIEA)
+    {
         $this->addNewLineAfterIEA = $addNewLineAfterIEA;
     }
 
@@ -179,8 +184,8 @@ class X12Serializer extends Serializer
      * @param HL $hl
      * @return string
      */
-    private function serializeHLSegment(&$hl) {
-
+    private function serializeHLSegment(&$hl)
+    {
         // HL
         $output = $this->serializeSegment($hl);
 

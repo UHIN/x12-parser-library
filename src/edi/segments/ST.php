@@ -10,7 +10,7 @@ namespace Uhin\X12Parser\EDI\Segments;
  * @property string ST02 Transaction Set Control Number
  * @property string ST03 Implementation Convention Reference
  */
-class ST extends Envelope
+class ST extends Segment
 {
 
     /** @var Segment */

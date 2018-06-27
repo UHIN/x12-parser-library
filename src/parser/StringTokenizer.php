@@ -26,7 +26,8 @@ class StringTokenizer
         return $this->currentIndex;
     }
 
-    public function getStringLength() {
+    public function getStringLength()
+    {
         return $this->stringLength;
     }
 
@@ -45,7 +46,8 @@ class StringTokenizer
         return $this->currentIndex >= $this->stringLength;
     }
 
-    public function getCompletionPercent() {
+    public function getCompletionPercent()
+    {
         if ($this->stringLength <= 0) {
             return 0;
         }

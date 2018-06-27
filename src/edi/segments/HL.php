@@ -11,7 +11,7 @@ namespace Uhin\X12Parser\EDI\Segments;
  * @property string HL03 Hierarchical Level Code
  * @property string HL04 Hierarchical Child Code
  */
-class HL extends Envelope
+class HL extends Segment
 {
 
     /** @var array */

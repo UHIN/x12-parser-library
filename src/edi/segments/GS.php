@@ -15,7 +15,7 @@ namespace Uhin\X12Parser\EDI\Segments;
  * @property string GS07 Responsible Agency Code
  * @property string GS08 Version/Rel. Ind. ID Code
  */
-class GS extends Envelope
+class GS extends Segment
 {
 
     /** @var Segment */
