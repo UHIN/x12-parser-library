@@ -1,5 +1,13 @@
 # X12 Parser / Serializer
 
+### Releases
+
+##### 1.0.0
+- Initial release
+- Basic parsing and serializing of X12
+- EDI is stored in hierarchical data structure
+
+
 ### Including this library
 
 You'll need to include this library in your project in order to use it. First, add the following to the repositories section of your composer.json file:
@@ -18,10 +26,11 @@ You'll need to include this library in your project in order to use it. First, a
 You can now include the library into your project by running:
 
 ```bash
-composer require uhin/x12-parser:dev-master
+composer require uhin/x12-parser:1.0.0
 ```
 
 Once you're included the library in your project, you can now begin writing code to parse and serialize X12 EDI.
+
 
 ### Examples
 
@@ -66,6 +75,7 @@ $serializer->addNewLineAfterIEA(true);
 // Generate the raw X12 string
 $rawX12 = $serializer->serialize();
 ```
+
 
 ### Unit Tests
 

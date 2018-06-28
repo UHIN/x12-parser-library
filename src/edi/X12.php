@@ -10,9 +10,19 @@ class X12 implements JsonSerializable
     /** @var array */
     public $ISA = [];
 
-    // TODO: add some lookup/search functions
+    public function getDataElement($filter)
+    {
+        // TODO: implement
+    }
+
+    public function getSegment($filter)
+    {
+        // TODO: implement
+    }
+
+    // TODO: add some lookup/filter functions
     // TODO: add setters?
-    // TODO: add some splitters?
+    // TODO: add splitting helpers?
 
     /**
      * Specify data which should be serialized to JSON
