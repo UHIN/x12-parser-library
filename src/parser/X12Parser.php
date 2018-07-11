@@ -22,7 +22,7 @@ class X12Parser
      */
     public function __construct($rawX12)
     {
-        $this->reader = new StringTokenizer(str_replace(["\n", "\t", "\r"], '', $rawX12));
+        $this->reader = new StringTokenizer(trim(str_replace(["\n", "\t", "\r"], '', $rawX12)));
     }
 
     /**

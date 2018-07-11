@@ -33,6 +33,10 @@ class StringTokenizer
 
     public function getSubstring($start, $length)
     {
+        // skip over the whitespace
+        while ($start < ($this->stringLength - 1) && ctype_space($this->string[$start])) {
+            $start++;
+        }
         return substr($this->string, $start, $length);
     }
 
@@ -101,6 +105,11 @@ class StringTokenizer
         }
 
         $start = $this->currentIndex;
+
+        // skip over the whitespace
+        while ($start < ($this->stringLength - 1) && ctype_space($this->string[$start])) {
+            $start++;
+        }
 
         // Look for the next delimiter in the file
         $nextDelimiterIndex = strpos($this->string, $delimiter, $this->currentIndex);
