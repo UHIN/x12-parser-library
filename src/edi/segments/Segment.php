@@ -87,7 +87,7 @@ class Segment implements JsonSerializable
         $segmentId = $this->getSegmentId();
 
         $serialized = [
-            'ID' => $this->getSegmentId(),
+            $segmentId . "00" => $this->getSegmentId(),
         ];
 
         // Convert the data elements into an associative array of values, ie: {"GS01" => "...", "GS02" => "...", etc.}

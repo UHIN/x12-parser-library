@@ -23,7 +23,17 @@ class StringTokenizer
 
     public function getPosition()
     {
-        return $this->currentIndex;
+        if ($this->isDone()) {
+            return $this->currentIndex;
+        }
+
+        // skip over the whitespace
+        $position = $this->currentIndex;
+        while ($position < ($this->stringLength - 1) && ctype_space($this->string[$position])) {
+            $position++;
+        }
+
+        return $position;
     }
 
     public function getStringLength()
