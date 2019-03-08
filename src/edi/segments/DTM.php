@@ -2,24 +2,27 @@
 namespace Uhin\X12Parser\EDI\Segments;
 
 /**
- * Class HL
+ * Class DTM
  *
  * @package Uhin\X12Parser\EDI\Segments
- *         
- * @property string HL01 Hierarchical ID Number
- * @property string HL02 Hierarchical Parent ID Number
- * @property string HL03 Hierarchical Level Code
- * @property string HL04 Hierarchical Child Code
- */
-class HL extends Segment
+ *
+ * @property string DTM01 Date/Time Qualifier
+ * @property string DTM02 Date
+*/
+class DTM extends Segment
 {
 
 	/** @var array */
-	public $HL = [];
-
-	/** @var array */
-	public $properties = [];
-
+	public $DTM = [];
+	
+	public function __construct($dataElements)
+	{
+		parent::__construct($dataElements);
+		
+		$this->arElemNames['DateTimeQualifier'] = 1;
+		$this->arElemNames['Date'] = 2;
+	}
+	
 	/**
 	 * Specify data which should be serialized to JSON
 	 *
@@ -32,17 +35,11 @@ class HL extends Segment
 	{
 		// Serialize the data elements
 		$serialized = parent::jsonSerialize();
-
-		// Properties
-		if (count($this->properties) > 0) {
-			$serialized["properties"] = $this->properties;
+		
+		if (count($this->DTM) > 0) {
+			$serialized["DTM"] = $this->DTM;
 		}
-
-		// HL
-		if (count($this->HL) > 0) {
-			$serialized["HL"] = $this->HL;
-		}
-
+		
 		return $serialized;
 	}
 }

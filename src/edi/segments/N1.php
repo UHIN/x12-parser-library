@@ -2,24 +2,29 @@
 namespace Uhin\X12Parser\EDI\Segments;
 
 /**
- * Class HL
+ * Class N1
  *
  * @package Uhin\X12Parser\EDI\Segments
- *         
- * @property string HL01 Hierarchical ID Number
- * @property string HL02 Hierarchical Parent ID Number
- * @property string HL03 Hierarchical Level Code
- * @property string HL04 Hierarchical Child Code
- */
-class HL extends Segment
+ *
+ * @property string N101 Entity Identifier Code
+ * @property string N103 Identification Code Qualifier
+ * @property string N104 Identification Code
+*/
+class N1 extends Segment
 {
 
 	/** @var array */
-	public $HL = [];
-
-	/** @var array */
-	public $properties = [];
-
+	public $N1 = [];
+	
+	public function __construct($dataElements)
+	{
+		parent::__construct($dataElements);
+		
+		$this->arElemNames['EntityIdentifierCode'] = 1;
+		$this->arElemNames['IdentificationCodeQualifier'] = 3;
+		$this->arElemNames['IdentificationCode'] = 4;
+	}
+	
 	/**
 	 * Specify data which should be serialized to JSON
 	 *
@@ -32,17 +37,11 @@ class HL extends Segment
 	{
 		// Serialize the data elements
 		$serialized = parent::jsonSerialize();
-
-		// Properties
-		if (count($this->properties) > 0) {
-			$serialized["properties"] = $this->properties;
+		
+		if (count($this->N1) > 0) {
+			$serialized["N1"] = $this->N1;
 		}
-
-		// HL
-		if (count($this->HL) > 0) {
-			$serialized["HL"] = $this->HL;
-		}
-
+		
 		return $serialized;
 	}
 }
