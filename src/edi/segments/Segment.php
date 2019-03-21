@@ -99,4 +99,14 @@ class Segment implements JsonSerializable
         return $serialized;
     }
 
+    /**
+     * Removes all empty data elements from the given segment.
+     */
+    public function trimEmptyDataElements()
+    {
+        while ("" === end($this->dataElements)) {
+            array_pop($this->dataElements);
+        }
+    }
+
 }

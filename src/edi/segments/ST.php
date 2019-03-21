@@ -2,6 +2,8 @@
 
 namespace Uhin\X12Parser\EDI\Segments;
 
+use Uhin\X12Parser\EDI\Traits\HasProperties;
+
 /**
  * Class ST
  * @package Uhin\X12Parser\EDI\Segments
@@ -13,14 +15,13 @@ namespace Uhin\X12Parser\EDI\Segments;
 class ST extends Segment
 {
 
+    use HasProperties;
+
     /** @var Segment */
     public $SE;
 
     /** @var array */
     public $HL = [];
-
-    /** @var array */
-    public $properties = [];
 
     /**
      * Specify data which should be serialized to JSON
