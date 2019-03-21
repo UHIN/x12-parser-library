@@ -5,6 +5,7 @@ namespace Uhin\X12Parser\EDI\Traits;
 trait HasProperties
 {
 
+
     /** @var array */
     public $properties = [];
 
