@@ -31,6 +31,20 @@ composer require uhin/x12-parser:1.0.0
 
 Once you're included the library in your project, you can now begin writing code to parse and serialize X12 EDI.
 
+For development: 
+
+In a service using this library you will make two changes to the composer.json to do development.
+
+First change the version of the require for this library to either: "dev-master", "1.x-dev", or "2.x-dev" - depending on which branch you are working on.
+
+Second add this block of code to your composer.json (editing the path):
+
+"repositories": [
+        {
+            "type": "path",
+            "url": "/Users/rmclelland/Projects/laravel_api"
+        }
+    ]
 
 ### Examples
 
@@ -76,12 +90,11 @@ $serializer->addNewLineAfterIEA(true);
 $rawX12 = $serializer->serialize();
 ```
 
-
 ### Unit Tests
 
 First, make sure that you've placed your test files in the `tests/test-files` directory.
 
-__NOTE:__ _Don't commit these files to git if they have any HIPPA data._ 
+__NOTE:__ _Don't commit these files to git if they have any HIPPA data._
 
 The current tests will look for the following files in the `tests/test-files` directory:
 - `277.txt`
