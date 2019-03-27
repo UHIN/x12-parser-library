@@ -68,6 +68,10 @@ class Segment implements JsonSerializable
             if ($index < count($this->dataElements)) {
                 $this->dataElements[$index] = $value;
                 return;
+            } else {
+                $this->dataElements = array_pad($this->dataElements, $index + 1, '');
+                $this->dataElements[$index] = $value;
+                return;
             }
         }
 
