@@ -14,12 +14,11 @@ You'll need to include this library in your project in order to use it. First, a
 ```json
 {
   ...
-  "repositories": [
-    {
-      "type": "vcs",
-      "url":  "ssh://git@git.uhin.org/shr/x12-parser.git"
-    }
-  ]
+  "require": {
+    ...
+    "uhin/x12-parser": "1.0.0"
+    ...
+  }
 }
 ```
 
