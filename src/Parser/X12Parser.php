@@ -175,7 +175,7 @@ class X12Parser
 
                     // Determine which ST or HL segment this HL belongs to, and then add it
                     $hlParentId = '';
-                    if ($hl->HL02) {
+                    if (isset($hl->HL02)) {
                         $hlParentId = trim($hl->HL02);
                     }
                     $parent = $st;
