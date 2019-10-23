@@ -174,7 +174,10 @@ class X12Parser
                     $hl = new HL($dataElements);
 
                     // Determine which ST or HL segment this HL belongs to, and then add it
-                    $hlParentId = trim($hl->HL02);
+                    $hlParentId = '';
+                    if ($hl->HL02) {
+                        $hlParentId = trim($hl->HL02);
+                    }
                     $parent = $st;
                     if (strlen($hlParentId) > 0) {
                         $parent = $this->findHLParent($st->HL, $hlParentId);
