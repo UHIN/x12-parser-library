@@ -33,8 +33,7 @@ class Segment implements JsonSerializable
      *   $gs02 = isset($gs->GS02) ?? '';
      *
      * @param string $name
-     * @return mixed
-     * @throws Exception
+     * @return bool
      */
     public function __isset($name)
     {
