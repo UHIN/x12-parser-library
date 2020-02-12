@@ -27,6 +27,29 @@ class Segment implements JsonSerializable
     }
 
     /**
+     * Magic method for detecting if elements of this segment are set.
+     * Example:
+     *   $gs = new GS(...);
+     *   $gs02 = isset($gs->GS02) ?? '';
+     *
+     * @param string $name
+     * @return bool
+     */
+    public function __isset($name)
+    {
+        // Try to get a data element, ie: check for something like "GS02"
+        if (preg_match('/' . $this->getSegmentId() . '(\d+)/', $name, $matches)) {
+            $index = intval(ltrim($matches[1], '0'));
+            if ($index < count($this->dataElements)) {
+                return isset($this->dataElements[$index]);
+            }
+        }
+
+        // Not Found
+        return false;
+    }
+
+    /**
      * Magic method for accessing elements of this segment, such as "GS02".
      * Example:
      *   $gs = new GS(...);
