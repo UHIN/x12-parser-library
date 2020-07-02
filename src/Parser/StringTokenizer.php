@@ -68,44 +68,6 @@ class StringTokenizer
         return min($this->currentIndex, $this->stringLength) / $this->stringLength;
     }
 
-    // Using a while loop to find the next delimiter
-    //public function next($delimiter, $incrementIndex = true)
-    //{
-    //    // Check if we're done reading the file
-    //    if ($this->isDone()) {
-    //        return false;
-    //    }
-    //
-    //    $start = $this->currentIndex;
-    //    $end = $start;
-    //
-    //    // Look for the next delimiter in the file
-    //    $found = false;
-    //    while ($end < $this->stringLength - 1) {
-    //        $end++;
-    //        if ($this->string[$end] === $delimiter) {
-    //            $found = true;
-    //            break;
-    //        }
-    //    }
-    //
-    //    if ($found) {
-    //        // If we found another delimiter, then return the text from the current position
-    //        // up until the position of the next delimiter
-    //        if ($incrementIndex) {
-    //            $this->currentIndex = $end + 1;
-    //        }
-    //        return substr($this->string, $start, ($end - $start));
-    //
-    //    } else {
-    //        // If no more delimiters can be found, then just return the rest of the file
-    //        if ($incrementIndex) {
-    //            $this->currentIndex = $this->stringLength;
-    //        }
-    //        return substr($this->string, $start);
-    //    }
-    //}
-
     // Using PHP's strpos instead of a while loop (seems to be faster)
     public function next($delimiter, $incrementIndex = true)
     {
