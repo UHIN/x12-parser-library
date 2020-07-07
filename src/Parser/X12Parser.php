@@ -3,18 +3,18 @@
 namespace Uhin\X12Parser\Parser;
 
 use Exception;
-use Uhin\X12Parser\EDI\Segments\Segment;
 use Uhin\X12Parser\EDI\X12;
 use Uhin\X12Parser\EDI\Segments\GS;
 use Uhin\X12Parser\EDI\Segments\HL;
-use Uhin\X12Parser\EDI\Segments\ISA;
 use Uhin\X12Parser\EDI\Segments\ST;
+use Uhin\X12Parser\EDI\Segments\ISA;
+use Uhin\X12Parser\Reader\StringReader;
+use Uhin\X12Parser\EDI\Segments\Segment;
 
 class X12Parser
 {
 
-    /** @var StringTokenizer */
-    private $reader;
+    protected $reader;
 
     /**
      * X12Parser constructor.
@@ -22,7 +22,7 @@ class X12Parser
      */
     public function __construct($rawX12)
     {
-        $this->reader = new StringTokenizer(trim(str_replace(["\n", "\t", "\r"], '', $rawX12)));
+        $this->reader = new StringTokenizer(new StringReader($rawX12));
     }
 
     /**
@@ -39,7 +39,7 @@ class X12Parser
         $startTime = microtime(true);
         $segmentCount = 0;
         if ($logging) {
-            echo "Beginning parsing of file: {$this->formatBytes($this->reader->getStringLength())} bytes.\r\n";
+            echo "Beginning parsing of file: {$this->formatBytes($this->reader->getStreamSize())} bytes.\r\n";
         }
 
         // Define some things for parsing the file
@@ -227,7 +227,7 @@ class X12Parser
         if ($logging) {
             $now = microtime(true);
             $elapsed = round($now - $startTime, 3);
-            echo "Finished parsing {$this->formatBytes($this->reader->getStringLength())} file ({$segmentCount} segments) in {$elapsed} seconds.\r\n";
+            echo "Finished parsing {$this->formatBytes($this->reader->getStreamSize())} file ({$segmentCount} segments) in {$elapsed} seconds.\r\n";
         }
 
         // Return the parsed X12

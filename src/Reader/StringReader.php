@@ -13,7 +13,7 @@ class StringReader implements Reader
     
     public function __construct(string $string)
     {
-        $this->stream = $string;
+        $this->stream = trim(str_replace(["\n", "\t", "\r"], '', $string));
         $this->length = strlen($this->stream);
     }
 
