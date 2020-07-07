@@ -20,6 +20,25 @@ class StringTokenizerTest extends TestCase
     }
 
     /**
+     * Assert next returns the next token in the stream.
+     *
+     * @dataProvider nextProvider
+     * 
+     * @param string $testString
+     * @param integer $byteOffset
+     * @param string $delimeter
+     * @param string $expectedToken
+     * @return void
+     */
+    public function testNext(string $testString, int $byteOffset, string $delimeter, string $expectedToken)
+    {
+        $tokenizer = new StringTokenizer($testString);
+        $tokenizer->setPosition($byteOffset);
+        $token = $tokenizer->next($delimeter);
+        $this->assertEquals($expectedToken, $token);
+    }
+
+    /**
      * Assert getSubstring returns a substring from the indicated offset of the indicated length, ignoring whitespace.
      *
      * @dataProvider getSubstringTestProvider
@@ -31,6 +50,30 @@ class StringTokenizerTest extends TestCase
         $tokenizer = new StringTokenizer($testString);
         $substring = $tokenizer->getSubstring($startOffset, $length);
         $this->assertEquals($expectedSubstring, $substring);
+    }
+
+    /**
+     * Data provider for testNext
+     *
+     * @return array
+     */
+    public function nextProvider() : array
+    {
+        $testString ="something something darkside.~was a terrible family guy episode";
+        return [
+            [
+                $testString,
+                0,
+                '~',
+                "something something darkside."
+            ],
+            [
+                $testString,
+                strpos($testString, '~') + 1,
+                '~',
+                "was a terrible family guy episode"
+            ]
+        ];
     }
 
     /**
