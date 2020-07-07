@@ -2,70 +2,77 @@
 
 namespace Uhin\X12Parser\Parser;
 
+use Uhin\X12Parser\Reader\Reader;
+
 class StringTokenizer
 {
+    /** @var Reader $reader */
+    protected $reader;
 
     private $string;
     private $stringLength;
     private $currentIndex;
 
-    public function __construct($string)
+    public function __construct(Reader $reader)
     {
-        $this->string = $string;
-        $this->stringLength = strlen($this->string);
+        $this->reader = $reader;
         $this->reset();
     }
 
     public function reset()
     {
-        $this->setPosition(0);
+        $this->reader->reset();
     }
 
     public function getPosition()
     {
-        if ($this->isDone()) {
-            return $this->currentIndex;
+        if ($this->reader->consumed()) {
+            return $this->reader->offset();
         }
 
         // skip over the whitespace
-        $position = $this->currentIndex;
-        while ($position < ($this->stringLength - 1) && ctype_space($this->string[$position])) {
+        $position = $this->reader->offset();
+        $length = $this->reader->length();
+        while ($position < ($length - 1) && ctype_space($this->reader->at($position))) {
             $position++;
         }
 
         return $position;
     }
 
-    public function getStringLength()
+    public function getStreamSize()
     {
-        return $this->stringLength;
+        return $this->reader->length();
     }
 
     public function getSubstring($start, $length)
     {
         // skip over the whitespace
-        while ($start < ($this->stringLength - 1) && ctype_space($this->string[$start])) {
+        $size = $this->reader->length();
+        while ($start < ($size - 1) && ctype_space($this->reader->at($start))) {
             $start++;
         }
-        return substr($this->string, $start, $length);
+        
+        return $this->reader->slice($start, $length);
     }
 
     public function setPosition($position)
     {
-        $this->currentIndex = $position;
+        $this->reader->seek($position);
     }
 
     public function isDone()
     {
-        return $this->currentIndex >= $this->stringLength;
+        return $this->reader->consumed();
     }
 
     public function getCompletionPercent()
     {
-        if ($this->stringLength <= 0) {
+        if ($this->reader->length() <= 0) {
             return 0;
         }
-        return min($this->currentIndex, $this->stringLength) / $this->stringLength;
+        
+        return min($this->reader->offset(), $this->reader->length()) / $this->reader->length();
     }
 
     // Using PHP's strpos instead of a while loop (seems to be faster)
@@ -76,30 +83,32 @@ class StringTokenizer
             return false;
         }
 
-        $start = $this->currentIndex;
+        $start = $this->reader->offset();
+        $length = $this->reader->length();
 
         // skip over the whitespace
-        while ($start < ($this->stringLength - 1) && ctype_space($this->string[$start])) {
+        while ($start < ($length - 1) && ctype_space($this->reader->at($start))) {
             $start++;
         }
 
         // Look for the next delimiter in the file
-        $nextDelimiterIndex = strpos($this->string, $delimiter, $this->currentIndex);
+        $nextDelimiterIndex = $this->reader->offsetOf($delimiter);
 
-        if ($nextDelimiterIndex === false) {
+        if ($nextDelimiterIndex === null) {
             // If no more delimiters can be found, then just return the rest of the file
             if ($incrementIndex) {
-                $this->currentIndex = $this->stringLength;
+                $this->reader->seek($length);
             }
-            return substr($this->string, $start);
-
+            
+            return $this->reader->slice($start);
         } else {
             // If we found another delimiter, then return the text from the current position
             // up until the position of the next delimiter
             if ($incrementIndex) {
-                $this->currentIndex = $nextDelimiterIndex + 1;
+                $this->reader->seek($nextDelimiterIndex + 1);
             }
-            return substr($this->string, $start, ($nextDelimiterIndex - $start));
+
+            return $this->reader->slice($start, ($nextDelimiterIndex - $start));
         }
     }
 
