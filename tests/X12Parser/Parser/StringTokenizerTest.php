@@ -1,6 +1,7 @@
 <?php
 
 use PHPUnit\Framework\TestCase;
+use Uhin\X12Parser\Reader\StringReader;
 use Uhin\X12Parser\Parser\StringTokenizer;
 
 class StringTokenizerTest extends TestCase
@@ -14,7 +15,7 @@ class StringTokenizerTest extends TestCase
      */
     public function testGetPosition(string $testString, int $setByteOffset, int $expectedByteOffset) : void
     {
-        $tokenizer = new StringTokenizer($testString);
+        $tokenizer = new StringTokenizer(new StringReader($testString));
         $tokenizer->setPosition($setByteOffset);
         $this->assertEquals($expectedByteOffset, $tokenizer->getPosition());
     }
@@ -32,7 +33,7 @@ class StringTokenizerTest extends TestCase
      */
     public function testNext(string $testString, int $byteOffset, string $delimeter, string $expectedToken)
     {
-        $tokenizer = new StringTokenizer($testString);
+        $tokenizer = new StringTokenizer(new StringReader($testString));
         $tokenizer->setPosition($byteOffset);
         $token = $tokenizer->next($delimeter);
         $this->assertEquals($expectedToken, $token);
@@ -47,7 +48,7 @@ class StringTokenizerTest extends TestCase
      */
     public function testGetSubstring(string $testString, int $startOffset, int $length, string $expectedSubstring) : void
     {
-        $tokenizer = new StringTokenizer($testString);
+        $tokenizer = new StringTokenizer(new StringReader($testString));
         $substring = $tokenizer->getSubstring($startOffset, $length);
         $this->assertEquals($expectedSubstring, $substring);
     }
