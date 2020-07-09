@@ -9,10 +9,6 @@ class StringTokenizer
     /** @var Reader $reader */
     protected $reader;
 
-    private $string;
-    private $stringLength;
-    private $currentIndex;
-
     public function __construct(Reader $reader)
     {
         $this->reader = $reader;
