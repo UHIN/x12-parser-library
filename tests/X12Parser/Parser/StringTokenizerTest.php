@@ -1,6 +1,8 @@
 <?php
 
+use Monolog\Logger;
 use PHPUnit\Framework\TestCase;
+use Monolog\Handler\NullHandler;
 use Uhin\X12Parser\Reader\Reader;
 use Uhin\X12Parser\Reader\StreamReader;
 use Uhin\X12Parser\Reader\StringReader;
@@ -20,7 +22,7 @@ class StringTokenizerTest extends TestCase
      */
     public function testGetPosition(Reader $reader, int $setByteOffset, int $expectedByteOffset) : void
     {
-        $tokenizer = new StringTokenizer($reader);
+        $tokenizer = $this->getTokenizer($reader);
         $tokenizer->setPosition($setByteOffset);
         $this->assertEquals($expectedByteOffset, $tokenizer->getPosition());
     }
@@ -35,7 +37,7 @@ class StringTokenizerTest extends TestCase
      */
     public function testGetSubstring(Reader $reader, int $startOffset, int $length, string $expectedSubstring) : void
     {
-        $tokenizer = new StringTokenizer($reader);
+        $tokenizer = $this->getTokenizer($reader);
         $substring = $tokenizer->getSubstring($startOffset, $length);
         $this->assertEquals($expectedSubstring, $substring);
     }
@@ -54,7 +56,7 @@ class StringTokenizerTest extends TestCase
      */
     public function testNext(Reader $reader, int $byteOffset, string $delimeter, string $expectedToken)
     {
-        $tokenizer = new StringTokenizer($reader);
+        $tokenizer = $this->getTokenizer($reader);
         $tokenizer->setPosition($byteOffset);
         $token = $tokenizer->next($delimeter);
         $this->assertEquals($expectedToken, $token);
@@ -162,5 +164,13 @@ class StringTokenizerTest extends TestCase
                 "was a terrible family guy episode."
             ]
         ];
+    }
+
+    protected function getTokenizer(Reader $reader)
+    {
+        $logger = new Logger('null');
+        $logger->pushHandler(new NullHandler(Logger::DEBUG));
+        
+        return new StringTokenizer($reader, $logger);
     }
 }
