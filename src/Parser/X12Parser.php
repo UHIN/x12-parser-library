@@ -132,9 +132,8 @@ class X12Parser
 
                     // Try to re-parse the delimiters, in case this is a second ISA in the same file
                     if (!$this->parseDelimiters($segmentDelimiter, $dataElementDelimiter, $repetitionDelimiter, $subRepetitionDelimiter)) {
-
                         // if delimiters couldn't be found... we should be done parsing this file
-                        break;
+                        break 2;
                     }
                     break;
 
