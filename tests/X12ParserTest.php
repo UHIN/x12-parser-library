@@ -2,6 +2,8 @@
 
 use PHPUnit\Framework\TestCase;
 use Uhin\X12Parser\Parser\X12Parser;
+use Uhin\X12Parser\Reader\StreamReader;
+use Uhin\X12Parser\Parser\StringTokenizer;
 use Uhin\X12Parser\Serializer\X12Serializer;
 
 final class X12ParserTest extends TestCase

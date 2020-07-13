@@ -20,9 +20,9 @@ class X12Parser
      * X12Parser constructor.
      * @param string $rawX12
      */
-    public function __construct($rawX12)
+    public function __construct(StringTokenizer $tokenizer)
     {
-        $this->reader = new StringTokenizer(new StringReader($rawX12));
+        $this->reader = $tokenizer;
     }
 
     /**
