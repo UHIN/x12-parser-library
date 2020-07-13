@@ -2,16 +2,23 @@
 
 namespace Uhin\X12Parser\Parser;
 
+use Psr\Log\LoggerInterface;
 use Uhin\X12Parser\Reader\Reader;
 
 class StringTokenizer
 {
     /** @var Reader $reader */
     protected $reader;
+    /** @var LoggerInterfacer $logger */
+    protected $logger;
 
-    public function __construct(Reader $reader)
+    public function __construct(
+        Reader $reader,
+        LoggerInterface $logger
+    )
     {
         $this->reader = $reader;
+        $this->logger = $logger;
         $this->reset();
     }
 

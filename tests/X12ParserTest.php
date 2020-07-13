@@ -18,8 +18,10 @@ final class X12ParserTest extends TestCase
         // Parse the file into memory
         $this->assertFileExists("./tests/test-files/{$fileType}.txt");
         $fileContents = file_get_contents("./tests/test-files/{$fileType}.txt");
+        $stream = fopen("./tests/test-files/{$fileType}.txt", "r");
         $fileContents = str_replace(["\n", "\t", "\r"], '', $fileContents);
-        $parser = new X12Parser($fileContents);
+
+        $parser = new X12Parser(new StringTokenizer(new StreamReader($stream)));
         $x12 = $parser->parse();
 
         // Serialize the object back into X12
@@ -28,38 +30,6 @@ final class X12ParserTest extends TestCase
         $serialized = str_replace(["\n", "\t", "\r"], '', $serialized);
 
         $this->assertEquals(trim($fileContents), trim($serialized));
-    }
-
-    /**
-     * @throws Exception
-     */
-    public function test277Parser(): void
-    {
-        $this->runFileParserTest('277');
-    }
-
-    /**
-     * @throws Exception
-     */
-    public function test835Parser(): void
-    {
-        $this->runFileParserTest('835');
-    }
-
-    /**
-     * @throws Exception
-     */
-    public function test837Parser(): void
-    {
-        $this->runFileParserTest('837');
-    }
-
-    /**
-     * @throws Exception
-     */
-    public function test999Parser(): void
-    {
-        $this->runFileParserTest('999');
     }
 
     /**

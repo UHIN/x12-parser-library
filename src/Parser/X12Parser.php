@@ -4,25 +4,32 @@ namespace Uhin\X12Parser\Parser;
 
 use Exception;
 use Uhin\X12Parser\EDI\X12;
+use Psr\Log\LoggerInterface;
 use Uhin\X12Parser\EDI\Segments\GS;
 use Uhin\X12Parser\EDI\Segments\HL;
 use Uhin\X12Parser\EDI\Segments\ST;
 use Uhin\X12Parser\EDI\Segments\ISA;
-use Uhin\X12Parser\Reader\StringReader;
 use Uhin\X12Parser\EDI\Segments\Segment;
 
 class X12Parser
 {
 
+    /** @var StringTokenizer $reader */
     protected $reader;
+    /** @var LoggerInterface $logger */
+    protected $logger;
 
     /**
      * X12Parser constructor.
      * @param string $rawX12
      */
-    public function __construct(StringTokenizer $tokenizer)
+    public function __construct(
+        StringTokenizer $tokenizer,
+        LoggerInterface $logger
+    )
     {
         $this->reader = $tokenizer;
+        $this->logger = $logger;
     }
 
     /**
@@ -34,13 +41,15 @@ class X12Parser
      */
     public function parse()
     {
-        // Logging
-        $logging = false;
         $startTime = microtime(true);
         $segmentCount = 0;
-        if ($logging) {
-            echo "Beginning parsing of file: {$this->formatBytes($this->reader->getStreamSize())} bytes.\r\n";
-        }
+        
+        $this->logger->info(
+            "Begging parsing of file.",
+            [
+                "filesize" => $this->formatBytes($this->reader->getStreamSize()) . "bytes"
+            ]
+        );
 
         // Define some things for parsing the file
         $x12 = new X12();
@@ -53,9 +62,24 @@ class X12Parser
         if (!$this->parseDelimiters($segmentDelimiter, $dataElementDelimiter, $repetitionDelimiter, $subRepetitionDelimiter)) {
             throw new Exception('Could not parse the delimiters of the first ISA.');
         }
+        
+        $this->logger->info(
+            "Parsed Delimiters",
+            compact(
+                'segmentDelimiter',
+                'dataElementDelimiter',
+                'repetitionDelimiter',
+                'subRepetitionDelimiter'
+            )
+        );
 
+        $this->logger->info("Entering parse loop");
         // Read through the segments in the file
         while (($segmentString = $this->reader->next($segmentDelimiter)) !== false) {
+            $this->logger->info("Found segment string", [
+                "string" => $segmentString,
+                "is_empty" => strlen($segmentString) <= 0
+            ]);
 
             // Check for an empty string
             if (strlen($segmentString) <= 0) {
@@ -65,12 +89,15 @@ class X12Parser
             // Get the data elements in this segment
             $dataElements = explode($dataElementDelimiter, $segmentString);
 
+            $this->logger->info("Found data elements", $dataElements);
+
             // Check for repetition delimiters... If there are any, split the element into an array
             for ($i = 1; $i < count($dataElements); $i++) {
                 if ($dataElements[0] === 'ISA' && ($i === 11 || $i === 16)) {
                     // Skip this check for ISA11 and ISA16
                     continue;
                 }
+                
                 if (strpos($dataElements[$i], $repetitionDelimiter) !== false) {
                     $dataElements[$i] = explode($repetitionDelimiter, $dataElements[$i]);
 
@@ -208,26 +235,6 @@ class X12Parser
 
             // Logging
             $segmentCount++;
-            if ($logging) {
-                if ($segmentCount % 5000 === 0) {
-                    $elapsed = microtime(true) - $startTime;
-                    $percentComplete = round($this->reader->getCompletionPercent() * 100, 3);
-                    echo "Parsed {$percentComplete}% of file, {$this->formatSeconds($elapsed)} elapsed...\r\n";
-                }
-            }
-
-            // Garbage cleanup
-            if ($segmentCount % 10000 === 0) {
-                gc_collect_cycles();
-            }
-
-        }
-
-        // Logging
-        if ($logging) {
-            $now = microtime(true);
-            $elapsed = round($now - $startTime, 3);
-            echo "Finished parsing {$this->formatBytes($this->reader->getStreamSize())} file ({$segmentCount} segments) in {$elapsed} seconds.\r\n";
         }
 
         // Return the parsed X12
@@ -397,27 +404,4 @@ class X12Parser
             return round($bytes / (1024 * 1024 * 1024), 3) . ' GB';
         }
     }
-
-    /**
-     * Formats the given number of seconds into a human readable string.
-     *
-     * @param $seconds
-     * @return string
-     */
-    private function formatSeconds($seconds)
-    {
-        $hours = floor($seconds / 3600);
-        $minutes = floor(($seconds / 60) % 60);
-        $seconds = round(fmod($seconds, 60), 3);
-        if ($hours <= 0) {
-            if ($minutes <= 0) {
-                return "{$seconds} sec";
-            } else {
-                return "{$minutes} min {$seconds} sec";
-            }
-        } else {
-            return "{$hours} hrs {$minutes} min {$seconds} sec";
-        }
-    }
-
 }
