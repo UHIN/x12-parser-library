@@ -15,6 +15,7 @@ class X12Parser
 
     /** @var StringTokenizer */
     private $reader;
+    private $segmentFunction;
 
     /**
      * X12Parser constructor.
@@ -23,6 +24,14 @@ class X12Parser
     public function __construct($rawX12)
     {
         $this->reader = new StringTokenizer(trim(str_replace(["\n", "\t", "\r"], '', $rawX12)));
+    }
+
+
+    /**
+     * Sets a function that will execute every time a segment is parsed.
+     */
+    public function setSegmentFunction($fun) {
+        $this->segmentFunction = $fun;
     }
 
     /**
@@ -48,14 +57,20 @@ class X12Parser
         $dataElementDelimiter = null;
         $repetitionDelimiter = null;
         $subRepetitionDelimiter = null;
+        $version = null;
 
         // We need to parse the delimiters of the first ISA before we can do anything
-        if (!$this->parseDelimiters($segmentDelimiter, $dataElementDelimiter, $repetitionDelimiter, $subRepetitionDelimiter)) {
+        if (!$this->parseDelimiters($segmentDelimiter, $dataElementDelimiter, $repetitionDelimiter, $subRepetitionDelimiter, $version)) {
             throw new Exception('Could not parse the delimiters of the first ISA.');
         }
 
         // Read through the segments in the file
         while (($segmentString = $this->reader->next($segmentDelimiter)) !== false) {
+            // If a segment Function is set, execute it
+            if (isset($this->segmentFunction)) {
+                $segmentFunction = $this->segmentFunction;
+                $segmentFunction();
+            }
 
             // Check for an empty string
             if (strlen($segmentString) <= 0) {
