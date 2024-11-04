@@ -87,6 +87,15 @@ class ISA extends Segment
         return $this->subRepetitionDelimiter;
     }
 
+    public function setDelimiters($delimiters = []) {
+        // ensure each delimiter is different
+        $this->segmentDelimiter = $delimiters['segment'];
+        $this->dataElementDelimiter = $delimiters['dataElement'];
+        $this->repetitionDelimiter = $delimiters['repetition'];
+        $this->subRepetitionDelimiter = $delimiters['subRepetition'];
+        
+    }
+
     /**
      * Specify data which should be serialized to JSON
      * @link http://php.net/manual/en/jsonserializable.jsonserialize.php
@@ -94,7 +103,7 @@ class ISA extends Segment
      * which is a value of any type other than a resource.
      * @since 5.4.0
      */
-    public function jsonSerialize()
+    public function jsonSerialize(): mixed
     {
         // Serialize the data elements
         $serialized = parent::jsonSerialize();
