@@ -18,6 +18,7 @@
   },
   "require": {
     "php": "^8.3",
+    "nesbot/carbon": "^3.0",
     "webmozart/assert": "^1.10"
   },
   "require-dev": {
