@@ -39,18 +39,14 @@ class EDIUtilityTest extends TestCase
     public function test_generate_dtp_format_qualifier_for_time_format()
     {
         $format = 'time';
-
         $result = $this->utility->generateDTPFormatQualifier($format);
-
         $this->assertEquals('TM', $result);
     }
 
     public function test_generate_dtp_format_qualifier_for_date_format()
     {
         $format = 'date';
-
         $result = $this->utility->generateDTPFormatQualifier($format);
-
         $this->assertEquals('D8', $result);
     }
 
