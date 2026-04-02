@@ -142,4 +142,44 @@ class EDIUtilityTest extends TestCase
         $result = $this->utility->generateX12Time($date);
         $this->assertEquals($date, $result);
     }
+
+    public function test_count_st_segments()
+    {
+        $filePath = __DIR__ . '/test-files/837.edi';
+        $this->assertFileExists($filePath);
+        $fileContents = file_get_contents($filePath);
+        $fileContents = str_replace(["\n", "\t", "\r"], '', $fileContents);
+        $parser = new X12Parser($fileContents);
+        $x12 = $parser->parse();
+
+        foreach ($x12->ISA as $isa) {
+            foreach ($isa->GS as $gs) {
+                foreach ($gs->ST as $st) {
+                    $result = $this->utility->countStSegments($st);
+                    $this->assertEquals(24, $result);
+                }
+            }
+        }
+    }
+
+    public function test_count_hl_segments()
+    {
+        $filePath = __DIR__ . ('/test-files/837.edi');
+        $this->assertFileExists($filePath);
+        $fileContents = file_get_contents($filePath);
+        $fileContents = str_replace(["\n", "\t", "\r"], '', $fileContents);
+        $parser = new X12Parser($fileContents);
+        $x12 = $parser->parse();
+
+        foreach ($x12->ISA as $isa) {
+            foreach ($isa->GS as $gs) {
+                foreach ($gs->ST as $st) {
+                    foreach ($st->HL as $hl) {
+                        $result = $this->utility->countHLSegments($hl);
+                        $this->assertEquals(18, $result);
+                    }
+                }
+            }
+        }
+    }
 }
