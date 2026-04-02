@@ -16,6 +16,8 @@ class Utility
      *  5.40 => 5.4
      *  20.00 => 20
      *  0020.00 => 20
+     * 
+     * @return string
      */
     public static function generateX12MonetaryValue(string $amount)
     {
