@@ -182,4 +182,73 @@ class EDIUtilityTest extends TestCase
             }
         }
     }
+
+    public function test_repetition_separator_ignored()
+    {
+        $filePath = __DIR__ . ('/test-files/850_v4010.edi');
+        $this->assertFileExists($filePath);
+        $parser = new X12Parser(file_get_contents($filePath));
+        $x12 = $parser->parse();
+
+        $interchangeControlHeader = reset($x12->ISA);
+        $functionalGroupHeader = reset($interchangeControlHeader->GS);
+        $transactionSetHeader = reset($functionalGroupHeader->ST);
+
+        $perSegmentValue = null;
+
+        foreach ( $transactionSetHeader->properties as $segment ) {
+            if ($segment->getSegmentId() === 'PER') {
+                $perSegmentValue = $segment->PER02;
+                break;
+            }
+        }
+
+        $this->assertEquals('GRAINGER BUYER NAME', $perSegmentValue, 'The ISA11 was treated as a repetition separator.');
+    }
+
+    public function test_separators()
+    {
+        $filePath = __DIR__ . ('/test-files/850_v5010.edi');
+        $this->assertFileExists($filePath);
+        $parser = new X12Parser(file_get_contents($filePath));
+        $x12 = $parser->parse();
+
+        $interchangeControlHeader = reset($x12->ISA);
+        $functionalGroupHeader = reset($interchangeControlHeader->GS);
+        $transactionSetHeader = reset($functionalGroupHeader->ST);
+
+        $refSegmentValue = null;
+        $mea1SegmentValue = null;
+        $mea2SegmentValue = null;
+
+        foreach ($transactionSetHeader->properties as $segment) {
+            if ($segment->getSegmentId() === 'REF') {
+                $refSegmentValue = $segment->REF02;
+            } elseif ($segment->getSegmentId() === 'MEA') {
+                if ($segment->MEA02 === 'LN') {
+                    $mea1SegmentValue = $segment->MEA04;
+                } elseif ($segment->MEA02 === 'WT') {
+                    $mea2SegmentValue = $segment->MEA04;
+                }
+            }
+        }
+
+        $this->assertSame(
+            ['COLOR-RED', 'COLOR-BLUE', 'COLOR-BLACK'],
+            $refSegmentValue,
+            'The Repetition Separator-only value was\'t parsed correctly.'
+        );
+
+        $this->assertSame(
+            [['IN', '2']],
+            $mea1SegmentValue,
+            'The Component Element Separator-only value was\'t parsed correctly.'
+        );
+
+        $this->assertSame(
+            [['LB', '1'], ['KG', '1']],
+            $mea2SegmentValue,
+            'The Repetition Separator & Component Element Separator combined value was\'t parsed correctly.'
+        );
+    }
 }

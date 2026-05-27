@@ -64,6 +64,8 @@ class X12Parser
             throw new Exception('Could not parse the delimiters of the first ISA.');
         }
 
+        $repetitionDelimitersSupported = false;
+
         // Read through the segments in the file
         while (($segmentString = $this->reader->next($segmentDelimiter)) !== false) {
             // If a segment Function is set, execute it
@@ -80,26 +82,28 @@ class X12Parser
             // Get the data elements in this segment
             $dataElements = explode($dataElementDelimiter, $segmentString);
 
-            // Check for repetition delimiters... If there are any, split the element into an array
-            for ($i = 1; $i < count($dataElements); $i++) {
-                if ($dataElements[0] === 'ISA' && ($i === 11 || $i === 16)) {
-                    // Skip this check for ISA11 and ISA16
-                    continue;
-                }
-                if (strpos($dataElements[$i], $repetitionDelimiter) !== false) {
-                    $dataElements[$i] = explode($repetitionDelimiter, $dataElements[$i]);
+            if ($dataElements[0] === 'ISA') {
+                // The ISA11 became "Repetition Separator" only after the "X12 Release 4020".
+                $repetitionDelimitersSupported = (int)$dataElements[12] >= 402;
+            } else {
+                $dataElementCount = count($dataElements);
 
-                    // Check for sub-repetition delimiters... If there are any, split the sub element into an array
-                    for ($j = 0; $j < count($dataElements[$i]); $j++) {
-                        if (strpos($dataElements[$i][$j], $subRepetitionDelimiter) !== false) {
-                            $dataElements[$i][$j] = explode($subRepetitionDelimiter, $dataElements[$i][$j]);
+                for ($i = 1; $i < $dataElementCount; $i++) {
+                    // Check for repetition delimiters... If there are any, split the element into an array
+                    if ($repetitionDelimitersSupported && strpos($dataElements[$i], $repetitionDelimiter) !== false) {
+                        $dataElements[$i] = explode($repetitionDelimiter, $dataElements[$i]);
+
+                        // Check for sub-repetition delimiters... If there are any, split the sub element into an array
+                        foreach ($dataElements[$i] as $j => $subDataElement) {
+                            if (strpos($subDataElement, $subRepetitionDelimiter) !== false) {
+                                $dataElements[$i][$j] = explode($subRepetitionDelimiter, $subDataElement);
+                            }
                         }
                     }
-                }
-
-                // Check for any lingering sub-repetition elements (this happens when you have sub-repetition elements with only one parent repetition element)
-                if (is_string($dataElements[$i]) && strpos($dataElements[$i], $subRepetitionDelimiter) !== false) {
-                    $dataElements[$i] = [explode($subRepetitionDelimiter, $dataElements[$i])];
+                    elseif (strpos($dataElements[$i], $subRepetitionDelimiter) !== false) {
+                        // Check for any lingering sub-repetition elements (this happens when you have sub-repetition elements with only one parent repetition element)
+                        $dataElements[$i] = [explode($subRepetitionDelimiter, $dataElements[$i])];
+                    }
                 }
             }
 
