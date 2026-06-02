@@ -236,19 +236,19 @@ class EDIUtilityTest extends TestCase
         $this->assertSame(
             ['COLOR-RED', 'COLOR-BLUE', 'COLOR-BLACK'],
             $refSegmentValue,
-            'The Repetition Separator-only value was\'t parsed correctly.'
+            'The Repetition Separator-only value wasn\'t parsed correctly.'
         );
 
         $this->assertSame(
             [['IN', '2']],
             $mea1SegmentValue,
-            'The Component Element Separator-only value was\'t parsed correctly.'
+            'The Component Element Separator-only value wasn\'t parsed correctly.'
         );
 
         $this->assertSame(
             [['LB', '1'], ['KG', '1']],
             $mea2SegmentValue,
-            'The Repetition Separator & Component Element Separator combined value was\'t parsed correctly.'
+            'The Repetition Separator & Component Element Separator combined value wasn\'t parsed correctly.'
         );
     }
 }
