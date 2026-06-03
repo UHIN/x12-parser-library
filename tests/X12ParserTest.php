@@ -55,6 +55,15 @@ final class X12ParserTest extends TestCase
         $this->runFileParserTest('837');
     }
 
+    /**
+     * @throws Exception
+     */
+    public function test850Parser(): void
+    {
+        $this->runFileParserTest('850_v4010');
+        $this->runFileParserTest('850_v5010');
+    }
+
     // /**
     //  * @throws Exception
     //  */
